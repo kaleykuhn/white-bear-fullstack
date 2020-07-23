@@ -1,5 +1,7 @@
 require("dotenv").config();
 const mysql = require("mysql");
+const selectUser = require("./queries/selectUser");
+const { toJson, toSafeParse } = require("./utils/helpers");
 
 const connection = mysql.createConnection({
    host: process.env.RDS_HOST,
@@ -10,11 +12,19 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
-connection.query("SELECT 1 + 1 AS solution", (error, results, fields) => {
-   if (error) {
-      console.log(error);
+connection.query(selectUser("kaley@gmail.com", "replace_me"), (err, res) => {
+   if (err) {
+      console.log(err);
    } else {
-      console.log("The solution is: ", results[0].solution);
+      const user = toSafeParse(toJson(res))[0];
+      console.log(user);
+      // const jsonRes = toJson(res);
+      //console.log(jsonRes);
+      //const parsedRes = toSafeParse(jsonRes);
+      //console.log(pasredRes);
+      //const firstObj = parsedRes[0];
+      //const user = firstObj;
+      //console.log(user)
    }
 });
 
