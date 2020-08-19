@@ -1,31 +1,11 @@
-require("dotenv").config();
-const mysql = require("mysql");
-const selectUser = require("./queries/selectUser");
-const { toJson, toSafeParse } = require("./utils/helpers");
+const express = require("express");
+const app = express();
 
-const connection = mysql.createConnection({
-   host: process.env.RDS_HOST,
-   user: process.env.RDS_USER,
-   password: process.env.RDS_PASSWORD,
-   database: "white_bear_app",
-});
+app.use("/api/v1/users", require("./api/v1/users"));
+app.get("/", (req, res) => res.send("Hello World!"));
 
-connection.connect();
+const port = process.env.PORT || 3045;
 
-connection.query(selectUser("kaley@gmail.com", "replace_me"), (err, res) => {
-   if (err) {
-      console.log(err);
-   } else {
-      const user = toSafeParse(toJson(res))[0];
-      console.log(user);
-      // const jsonRes = toJson(res);
-      //console.log(jsonRes);
-      //const parsedRes = toSafeParse(jsonRes);
-      //console.log(pasredRes);
-      //const firstObj = parsedRes[0];
-      //const user = firstObj;
-      //console.log(user)
-   }
-});
-
-connection.end();
+app.listen(port, () =>
+   console.log(`Server running at http://localhost:${port}`)
+);
