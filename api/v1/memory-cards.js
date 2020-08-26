@@ -10,14 +10,25 @@ const selectAllCards = require("../../queries/selectAllCards");
 
 router.get("/", (req, res) => {
    console.log(req.query);
-   const { userId, searchTerm } = req.query;
+   const { userId, searchTerm, order } = req.query;
+   let constructedSearchTerm;
+   if (searchTerm === "" || searchTerm === undefined) {
+      constructedSearchTerm = "%%";
+   } else {
+      constructedSearchTerm = `%${searchTerm}%`;
+   }
+   // destructure object above
    //    const userId = req.query.userId;
    //    const searchTerm = req.query.searchTerm;
-   db.query(
-      selectAllCards(userId, searchTerm, "`memory_cards`.`created_at` DESC")
-   )
+
+   /*https://www.npmjs.com/package/sqlstring#escaping-query-values for security purposes */
+   db.query(selectAllCards, [
+      userId,
+      constructedSearchTerm,
+      constructedSearchTerm,
+      order,
+   ])
       .then((dbRes) => {
-         console.log(dbRes);
          res.json(dbRes);
       })
       .catch((err) => {
