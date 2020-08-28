@@ -9,7 +9,7 @@ import actions from "../../store/actions";
 class ReviewImagery extends React.Component {
    constructor(props) {
       super(props);
-      console.log("Empty Array of queue cards");
+      console.log("Empty Array of queue cards!");
       if (props.queue.cards.length === 0) {
          axios
             .get(
