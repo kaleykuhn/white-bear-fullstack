@@ -81,7 +81,7 @@ export default class Allcards extends React.Component {
                <div className="col-4 col-sm-4 mt-1 ">
                   <button
                      className="btn btn-primary btn-block btn-sm "
-                     onClick={() => this.setsearchTerm()}
+                     onClick={() => this.setSearchTerm()}
                   >
                      search
                   </button>
