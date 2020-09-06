@@ -4,7 +4,6 @@ const router = express.Router();
 const db = require("../../db");
 const selectUser = require("../../queries/selectUser");
 const { toJson, toSafeParse, toHash } = require("../../utils/helpers");
-const bcrypt = require("bcrypt");
 
 // @route       GET api/v1/users
 // @desc        Get a valid user via email and password
@@ -28,7 +27,7 @@ router.get("/", (req, res) => {
 // @access      Public
 router.post("/", async (req, res) => {
    const user = req.body;
-   user.password = toHash(user.password);
+   user.password = await toHash(user.password);
    console.log(user);
 });
 
