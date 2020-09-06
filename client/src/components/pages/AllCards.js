@@ -89,7 +89,9 @@ export default class Allcards extends React.Component {
             </div>
             <div className="row">
                <div className="col-4 col-sm-4 mb-4">
-                  <p className="text-brand text-muted ml-4">Sort by cards</p>
+                  <p className="text-brand text-muted ml-4 text-danger">
+                     Sort by cards
+                  </p>
                </div>
                <div className="form-group col-8 col-sm-8 mb-6 mt-0 col-auto">
                   <select
