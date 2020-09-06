@@ -30,7 +30,7 @@ export default class Allcards extends React.Component {
       });
    }
    setSearchTerm() {
-      const searchInput = document.getElementById("search-input");
+      const searchInput = document.getElementById("search-input").value;
       this.setState({ searchTerm: searchInput }, () => {
          this.setMemoryCards();
       });
