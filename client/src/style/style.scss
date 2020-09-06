@@ -4,7 +4,11 @@
 //#form1 {
 //display: none;
 //}
-
+.landing-text {
+   color: white;
+   font-size: 22px;
+   font-family: $font-family-serif !important;
+}
 // http://css-tricks.com/perfect-full-page-background-image/
 .landing-background {
    //instead of background-url:

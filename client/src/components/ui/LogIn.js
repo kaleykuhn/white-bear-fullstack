@@ -1,6 +1,5 @@
 import React from "react";
 import classnames from "classnames";
-import hash from "object-hash";
 import { v4 as getUUid } from "uuid";
 import { withRouter } from "react-router-dom";
 import { EMAIL_REGEX } from "../../utils/helpers";
@@ -82,7 +81,7 @@ class Login extends React.Component {
          const user = {
             id: getUUid(),
             email: emailInput,
-            password: hash(passwordInput),
+            password: passwordInput,
             createdAt: Date.now(),
          };
          console.log("Created user object for POST:", user);
@@ -115,14 +114,12 @@ class Login extends React.Component {
             <div className="card">
                <div className="card-body text-dark bg-white rounded">
                   <h2 className="card-title">Welcome back</h2>
-                  <p className="card-title">
+                  <p className=" mb-1 card-title">
                      Log in with your email address and password.
                   </p>
 
-                  <p className="text-success"></p>
-                  <label htmlFor="login-email-input" className="text-muted">
-                     Email address
-                  </label>
+                  <p className="text-success mt-4"></p>
+                  <label htmlFor="login-email-input">Email address</label>
                   <input
                      type="email"
                      className={classnames({
@@ -139,9 +136,7 @@ class Login extends React.Component {
                      </small>
                   )}
 
-                  <label htmlFor="login-password-input" className="text-muted">
-                     Password
-                  </label>
+                  <label htmlFor="login-password-input">Password</label>
                   <input
                      type="password"
                      className={classnames({

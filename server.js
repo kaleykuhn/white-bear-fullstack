@@ -4,6 +4,7 @@ const path = require("path");
 //var cors = require("cors");
 // need to use if you have multiple microserve apps
 //app.use(cors());
+app.use(express.json());
 
 app.use("/api/v1/users", require("./api/v1/users"));
 app.use("/api/v1/memory-cards", require("./api/v1/memory-cards"));
