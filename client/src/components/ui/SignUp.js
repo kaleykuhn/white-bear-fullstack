@@ -59,10 +59,10 @@ class SignUp extends React.Component {
    // set state of password
    async setPasswordState(passwordInput, emailInput) {
       console.log(passwordInput);
-      //can't be blank
+      // can't be blank
       // must be at least 9 characters
-      //cannot contain the local-part of the email
-      //must have at least 3 unique characters
+      // cannot contain the local-part of the email
+      // must have at least 3 unique characters
       const uniqChars = [...new Set(passwordInput)];
       console.log(uniqChars);
       if (passwordInput === "") {
