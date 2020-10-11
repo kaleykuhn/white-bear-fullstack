@@ -2,7 +2,7 @@ import React from "react";
 import classnames from "classnames";
 import { v4 as getUUid } from "uuid";
 import { withRouter } from "react-router-dom";
-import { EMAIL_REGEX } from "../../utils/helpers";
+//import { EMAIL_REGEX } from "../../utils/helpers";
 import axios from "axios";
 import actions from "../../store/actions";
 import { connect } from "react-redux";
@@ -24,111 +24,120 @@ class SignUp extends React.Component {
       });
    }
 
-   //set email state
-   async setEmailState(emailInput) {
-      const lowerCasedEmailInput = emailInput.toLowerCase();
-      console.log(lowerCasedEmailInput);
+   //set email state client side
+   // async setEmailState(emailInput) {
+   //    const lowerCasedEmailInput = emailInput.toLowerCase();
+   //    console.log(lowerCasedEmailInput);
 
-      if (emailInput === "")
-         this.setState({
-            emailError: "Please enter your email address.",
-            hasEmailError: true,
-         });
-      else if (!EMAIL_REGEX.test(lowerCasedEmailInput)) {
-         console.log("NOT a VALID EMAIl");
-         this.setState({
-            emailError: "Please enter a valid email address.",
-            hasEmailError: true,
-         });
-      } else {
-         this.setState({ emailError: "", hasEmailError: false });
-      }
-   }
+   //    if (emailInput === "")
+   //       this.setState({
+   //          emailError: "Please enter your email address.",
+   //          hasEmailError: true,
+   //       });
+   //    else if (!EMAIL_REGEX.test(lowerCasedEmailInput)) {
+   //       console.log("NOT a VALID EMAIl");
+   //       this.setState({
+   //          emailError: "Please enter a valid email address.",
+   //          hasEmailError: true,
+   //       });
+   //    } else {
+   //       this.setState({ emailError: "", hasEmailError: false });
+   //    }
+   // }
 
-   checkHasLocalPart(passwordInput, emailInput) {
-      console.log(emailInput);
-      //split returns an array and you need to get first thing in that array
-      const localPart = emailInput.split("@")[0];
-      console.log(localPart);
-      //includes method returns true or false
-      //return passwordInput.includes(localPart);
-      if (localPart === "") return false;
-      else if (localPart.length < 4) return false;
-      else return passwordInput.includes(localPart);
-   }
-   // set state of password
-   async setPasswordState(passwordInput, emailInput) {
-      console.log(passwordInput);
-      // can't be blank
-      // must be at least 9 characters
-      // cannot contain the local-part of the email
-      // must have at least 3 unique characters
-      const uniqChars = [...new Set(passwordInput)];
-      console.log(uniqChars);
-      if (passwordInput === "") {
-         this.setState({
-            passwordError: "Please create a password.",
-            hasPasswordError: true,
-         });
-      } else if (passwordInput.length < 9) {
-         this.setState({
-            passwordError: "Your password must be at least 9 characters",
-            hasPasswordError: true,
-         });
-      } else if (this.checkHasLocalPart(passwordInput, emailInput)) {
-         // if it contains local part returns true
-         // then set error state
-         this.setState({
-            passwordError:
-               "For your safety password cannot contain your email address",
-            hasPasswordError: true,
-         });
-      } else if (uniqChars.length < 3) {
-         this.setState({
-            passwordError:
-               "For your safety, your password must contain at least 3 unique characters",
-            hasPasswordError: true,
-         });
-      } else {
-         this.setState({ passwordError: "", hasPasswordError: false });
-      }
-   }
+   // checkHasLocalPart(passwordInput, emailInput) client side
+   //    console.log(emailInput);
+   //    //split returns an array and you need to get first thing in that array
+   //    const localPart = emailInput.split("@")[0];
+   //    console.log(localPart);
+   //    //includes method returns true or false
+   //    //return passwordInput.includes(localPart);
+   //    if (localPart === "") return false;
+   //    else if (localPart.length < 4) return false;
+   //    else return passwordInput.includes(localPart);
+   // }
+   // set state of password client side
+   // async setPasswordState(passwordInput, emailInput) {
+   //    console.log(passwordInput);
+   //    // can't be blank
+   //    // must be at least 9 characters
+   //    // cannot contain the local-part of the email
+   //    // must have at least 3 unique characters
+   //    const uniqChars = [...new Set(passwordInput)];
+   //    console.log(uniqChars);
+   //    if (passwordInput === "") {
+   //       this.setState({
+   //          passwordError: "Please create a password.",
+   //          hasPasswordError: true,
+   //       });
+   //    } else if (passwordInput.length < 9) {
+   //       this.setState({
+   //          passwordError: "Your password must be at least 9 characters",
+   //          hasPasswordError: true,
+   //       });
+   //    } else if (this.checkHasLocalPart(passwordInput, emailInput)) {
+   //       // if it contains local part returns true
+   //       // then set error state
+   //       this.setState({
+   //          passwordError:
+   //             "For your safety password cannot contain your email address",
+   //          hasPasswordError: true,
+   //       });
+   //    } else if (uniqChars.length < 3) {
+   //       this.setState({
+   //          passwordError:
+   //             "For your safety, your password must contain at least 3 unique characters",
+   //          hasPasswordError: true,
+   //       });
+   //    } else {
+   //       this.setState({ passwordError: "", hasPasswordError: false });
+   //    }
+   // }
    //setting the state of App
    async validateAndCreateUser() {
-      console.log("VALIDATE ME");
       //Email cannot be blank
       //must have valid email regex
       const emailInput = document.getElementById("signup-email-input").value;
-      console.log(emailInput);
       const passwordInput = document.getElementById("signup-password-input")
          .value;
-      await this.setEmailState(emailInput);
-      await this.setPasswordState(passwordInput, emailInput);
-      if (
-         this.state.hasEmailError === false &&
-         this.state.hasPasswordError === false
-      ) {
-         // Create user obj
-         const user = {
-            id: getUUid(),
-            email: emailInput,
-            password: passwordInput,
-            createdAt: Date.now(),
-         };
-         console.log("Created user object for POST:", user);
 
-         // Post to API
-         axios
-            .post("/api/v1/users", user)
-            .then((res) => {
-               console.log(res);
-               // Update currentUser in global state with API response
-               // Go to next page: this.props.history.push("/create-answer");
-            })
-            .catch((err) => {
-               console.log(err.response.data);
+      // Create user obj
+      const user = {
+         id: getUUid(),
+         email: emailInput,
+         password: passwordInput,
+         createdAt: Date.now(),
+      };
+      console.log("Created user object for POST:", user);
+
+      // Post to API
+      axios
+         .post("/api/v1/users", user)
+         .then((res) => {
+            console.log(res.data);
+            // Update currentUser in global state with API response
+            this.props.dispatch({
+               type: actions.UPDATE_CURRENT_USER,
+               payload: res.data,
             });
-      }
+            this.props.history.push("/create-answer");
+         })
+         .catch((err) => {
+            //const data = err.response.data
+            const { data } = err.response;
+            console.log(data);
+            const { emailError, passwordError } = data;
+            if (emailError !== "") {
+               this.setState({ hasEmailError: true, emailError });
+            } else {
+               this.setState({ hasEmailError: false, emailError });
+            }
+            if (passwordError !== "") {
+               this.setState({ hasPasswordError: true, passwordError });
+            } else {
+               this.setState({ hasPasswordError: false, passwordError });
+            }
+         });
    }
 
    render() {
