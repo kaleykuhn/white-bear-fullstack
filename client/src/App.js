@@ -10,7 +10,34 @@ import ReviewEmpty from "./components/pages/ReviewEmpty";
 import AllCards from "./components/pages/AllCards";
 import Edit from "./components/pages/Edit";
 import NotFound from "./components/pages/NotFound";
+import jwtDecode from "jwt-decode";
+import store from "./store/store";
+import actions from "./store/actions";
 
+const authToken = localStorage.authToken;
+if (authToken) {
+   // if the authToken is not expired
+   const currentTimeInSec = Date.now() / 1000;
+   const user = jwtDecode(authToken);
+   if (currentTimeInSec > user.exp) {
+      console.log("expired token");
+      // remove the currentUser from the global state/ redux store
+   } else {
+      console.log("valid token");
+      // store the user in local state / redux store (currentUser)
+      store.dispatch({
+         type: actions.UPDATE_CURRENT_USER,
+         payload: {},
+      });
+      // TODO: set authorization headers
+      const currentUrl = window.location.pathname;
+      if (currentUrl === "/") {
+         window.location.href = "/create-answer";
+      }
+   }
+} else {
+   console.log("no token");
+}
 function App() {
    return (
       <Router>
