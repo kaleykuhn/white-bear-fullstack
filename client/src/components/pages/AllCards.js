@@ -4,7 +4,7 @@ import AppTemplate from "../ui/AppTemplate";
 import MemoryCard from "../ui/MemoryCard";
 
 import axios from "axios";
-const userId = "d4c58c04-969e-47fc-a655-82c666564645";
+//const userId = "d4c58c04-969e-47fc-a655-82c666564645";
 
 export default class Allcards extends React.Component {
    constructor(props) {
@@ -39,7 +39,7 @@ export default class Allcards extends React.Component {
    setMemoryCards() {
       axios
          .get(
-            `/api/v1/memory-cards?userId=${userId}&searchTerm=${this.state.searchTerm}&order=${this.state.order}`
+            `/api/v1/memory-cards?searchTerm=${this.state.searchTerm}&order=${this.state.order}`
          )
          .then((res) => {
             console.log(res.data);
