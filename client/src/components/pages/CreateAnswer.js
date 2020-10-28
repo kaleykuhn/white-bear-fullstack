@@ -1,6 +1,5 @@
 import React from "react";
 import AppTemplate from "../ui/AppTemplate";
-import { Link } from "react-router-dom";
 import classnames from "classnames";
 import { checkIsOver, MAX_CARD_CHARS, defaultLevel } from "../../utils/helpers";
 import { connect } from "react-redux";
@@ -37,16 +36,17 @@ class CreateAnswer extends React.Component {
          payload: {
             // the card itself
             id: getUUid(),
-            answer: "",
+            answer: this.state.answerText,
             imagery: "",
-            userId: "",
-            createAt: Date.now(),
+            userId: this.props.currentUser.id,
+            createdAt: Date.now(),
             nextAttemptAt: getNextAttemptAt(defaultLevel, currentTime), //
             lastAttemptAt: currentTime,
             totalSuccessfulAttempts: 0,
             level: 1,
          },
       });
+      this.props.history.push("/create-imagery");
    }
 
    render() {
@@ -102,6 +102,6 @@ class CreateAnswer extends React.Component {
 }
 
 function mapStateToProps(state) {
-   return {};
+   return { currentUser: state.currentUser };
 }
 export default connect(mapStateToProps)(CreateAnswer);

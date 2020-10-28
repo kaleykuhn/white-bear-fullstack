@@ -2,12 +2,14 @@ import React from "react";
 import saveIcon from "../../icons/save.svg";
 import AppTemplate from "../ui/AppTemplate";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import actions from "../../store/actions";
 import { MAX_CARD_CHARS, checkIsOver } from "../../utils/helpers";
 import classnames from "classnames";
-import memoryCards from "../../mock-data/memory-cards";
-const memoryCard = memoryCards[5];
+////import memoryCards from "../../mock-data/memory-cards";
+//const memoryCard = memoryCards[5];
 
-export default class CreateImagery extends React.Component {
+class CreateImagery extends React.Component {
    constructor(props) {
       super(props); //
       this.state = {
@@ -25,6 +27,37 @@ export default class CreateImagery extends React.Component {
       ) {
          return true;
       } else return false;
+   }
+
+   updateCreatableCard() {
+      console.log("UPDATING CREATABLE CARD");
+      const {
+         id,
+         answer,
+         userId,
+         createdAt,
+         nextAttemptAt,
+         lastAttemptAt,
+         totalSuccessfulAttempts,
+         level,
+      } = this.props.creatableCard;
+      this.props.dispatch({
+         type: actions.UPDATE_CREATABLE_CARD,
+         payload: {
+            // the card itself
+            id,
+            answer,
+            imagery: this.state.imageryText,
+            userId,
+            createdAt,
+            nextAttemptAt, //
+            lastAttemptAt,
+            totalSuccessfulAttempts,
+            level,
+         },
+      });
+      // save to the database (make an API call)
+      // go to create-answer
    }
 
    render() {
@@ -47,7 +80,8 @@ export default class CreateImagery extends React.Component {
 
             <div className="card " id="cardText">
                <div className="card-body bg-secondary">
-                  {memoryCard.imagery}
+                  {this.props.creatableCard.answer}
+                  {/* {memoryCard.imagery} */}
                </div>
             </div>
 
@@ -78,6 +112,9 @@ export default class CreateImagery extends React.Component {
                className={classnames("btn btn-primary float-right btn-lg", {
                   disabled: this.checkImageryHasInvalidCharCount(),
                })}
+               onClick={() => {
+                  this.updateCreatableCard();
+               }}
             >
                <img
                   src={saveIcon}
@@ -91,3 +128,7 @@ export default class CreateImagery extends React.Component {
       );
    }
 }
+function mapStateToProps(state) {
+   return { creatableCard: state.creatableCard };
+}
+export default connect(mapStateToProps)(CreateImagery);
