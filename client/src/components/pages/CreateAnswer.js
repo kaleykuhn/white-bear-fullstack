@@ -2,9 +2,14 @@ import React from "react";
 import AppTemplate from "../ui/AppTemplate";
 import { Link } from "react-router-dom";
 import classnames from "classnames";
-import { checkIsOver, MAX_CARD_CHARS } from "../../utils/helpers";
+import { checkIsOver, MAX_CARD_CHARS, defaultLevel } from "../../utils/helpers";
+import { connect } from "react-redux";
+import actions from "../../store/actions";
+import { v4 as getUUid } from "uuid";
+import getNextAttemptAt from "../../utils/getNextAttemptAt";
+import currentUser from "../../store/reducers/currentUser";
 
-export default class CreateAnswer extends React.Component {
+class CreateAnswer extends React.Component {
    constructor(props) {
       super(props);
       this.state = {
@@ -22,6 +27,26 @@ export default class CreateAnswer extends React.Component {
       ) {
          return true;
       } else return false;
+   }
+
+   setCreatableCard() {
+      console.log("UPDATE_CREATABLE_CARD");
+      const currentTime = Date.now();
+      this.props.dispatch({
+         type: actions.UPDATE_CREATABLE_CARD,
+         payload: {
+            // the card itself
+            id: getUUid(),
+            answer: "",
+            imagery: "",
+            userId: "",
+            createAt: Date.now(),
+            nextAttemptAt: getNextAttemptAt(defaultLevel, currentTime), //
+            lastAttemptAt: currentTime,
+            totalSuccessfulAttempts: 0,
+            level: 1,
+         },
+      });
    }
 
    render() {
@@ -57,8 +82,7 @@ export default class CreateAnswer extends React.Component {
                </span>
             </p>
             <div className="clearfix"></div>
-            <Link
-               to="/create-imagery"
+            <button
                type="button"
                className={classnames(
                   "btn btn-outline-primary btn-lg float-right mb-3",
@@ -66,11 +90,18 @@ export default class CreateAnswer extends React.Component {
                      disabled: this.checkHasInvalidCharCount(),
                   }
                )}
-               id="nextButton"
+               onClick={() => {
+                  this.setCreatableCard();
+               }}
             >
                Next
-            </Link>
+            </button>
          </AppTemplate>
       );
    }
 }
+
+function mapStateToProps(state) {
+   return {};
+}
+export default connect(mapStateToProps)(CreateAnswer);

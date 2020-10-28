@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const path = require("path");
-//var cors = require("cors");
+// const cors = require("cors");
 // need to use if you have multiple microserve apps
 //app.use(cors());
 app.use(express.json());
