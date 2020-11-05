@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import actions from "../../store/actions";
 import { MAX_CARD_CHARS, checkIsOver } from "../../utils/helpers";
 import classnames from "classnames";
+import axios from "axios";
 ////import memoryCards from "../../mock-data/memory-cards";
 //const memoryCard = memoryCards[5];
 
@@ -29,7 +30,7 @@ class CreateImagery extends React.Component {
       } else return false;
    }
 
-   updateCreatableCard() {
+   async updateCreatableCard() {
       console.log("UPDATING CREATABLE CARD");
       const {
          id,
@@ -41,7 +42,7 @@ class CreateImagery extends React.Component {
          totalSuccessfulAttempts,
          level,
       } = this.props.creatableCard;
-      this.props.dispatch({
+      await this.props.dispatch({
          type: actions.UPDATE_CREATABLE_CARD,
          payload: {
             // the card itself
@@ -57,7 +58,21 @@ class CreateImagery extends React.Component {
          },
       });
       // save to the database (make an API call)
-      // go to create-answer
+      axios
+         .post("/api/v1/memory-cards", this.props.creatableCard)
+         .then((res) => {
+            console.log("Memory Card created");
+            //Display success overlay
+            // route to "/create-answer"
+         })
+         .catch((err) => {
+            //const data = err.response.data
+            const { data } = err.response;
+            console.log(data);
+            // Display error overlay
+            // Hide error overlay after 5 seconds
+            // stay on this page
+         });
    }
 
    render() {
