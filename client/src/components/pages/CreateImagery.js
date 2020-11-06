@@ -31,53 +31,55 @@ class CreateImagery extends React.Component {
    }
 
    async updateCreatableCard() {
-      console.log("UPDATING CREATABLE CARD");
-      const {
-         id,
-         answer,
-         userId,
-         createdAt,
-         nextAttemptAt,
-         lastAttemptAt,
-         totalSuccessfulAttempts,
-         level,
-      } = this.props.creatableCard;
-      await this.props.dispatch({
-         type: actions.UPDATE_CREATABLE_CARD,
-         payload: {
-            // the card itself
+      if (!this.checkImageryHasInvalidCharCount()) {
+         console.log("UPDATING CREATABLE CARD");
+         const {
             id,
             answer,
-            imagery: this.state.imageryText,
             userId,
             createdAt,
-            nextAttemptAt, //
+            nextAttemptAt,
             lastAttemptAt,
             totalSuccessfulAttempts,
             level,
-         },
-      });
-      // save to the database (make an API call)
-      axios
-         .post("/api/v1/memory-cards", this.props.creatableCard)
-         .then(() => {
-            console.log("Memory Card created");
-            //TODO: Display success overlay
-            // route to "/create-answer"
-            // clear creatable card from Redux
-            this.props.dispatch({
-               type: actions.UPDATE_CREATABLE_CARD,
-               payload: {},
-            });
-            // route to "/create-answer"
-            this.props.history.push("/create-answer");
-         })
-         .catch((err) => {
-            //const data = err.response.data
-            const { data } = err.response;
-            console.log(data);
-            // TODO: Display error overlay, hide error overlay after 5 seconds
+         } = this.props.creatableCard;
+         await this.props.dispatch({
+            type: actions.UPDATE_CREATABLE_CARD,
+            payload: {
+               // the card itself
+               id,
+               answer,
+               imagery: this.state.imageryText,
+               userId,
+               createdAt,
+               nextAttemptAt, //
+               lastAttemptAt,
+               totalSuccessfulAttempts,
+               level,
+            },
          });
+         // save to the database (make an API call)
+         axios
+            .post("/api/v1/memory-cards", this.props.creatableCard)
+            .then(() => {
+               console.log("Memory Card created");
+               //TODO: Display success overlay
+               // route to "/create-answer"
+               // clear creatable card from Redux
+               this.props.dispatch({
+                  type: actions.UPDATE_CREATABLE_CARD,
+                  payload: {},
+               });
+               // route to "/create-answer"
+               this.props.history.push("/create-answer");
+            })
+            .catch((err) => {
+               //const data = err.response.data
+               const { data } = err.response;
+               console.log(data);
+               // TODO: Display error overlay, hide error overlay after 5 seconds
+            });
+      }
    }
 
    render() {
