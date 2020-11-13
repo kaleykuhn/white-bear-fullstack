@@ -2,7 +2,6 @@ import React from "react";
 import AppTemplate from "../ui/AppTemplate";
 import Save from "../../icons/save.svg";
 import { Link } from "react-router-dom";
-import memoryCards from "../../mock-data/memory-cards";
 import toDisplayDate from "date-fns/format";
 import classnames from "classnames";
 import { checkIsOver, MAX_CARD_CHARS } from "../../utils/helpers"; //
@@ -10,16 +9,15 @@ import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import without from "lodash/without";
 import actions from "../../store/actions";
-
-const memoryCard = memoryCards[2];
+import axios from "axios";
 
 class Edit extends React.Component {
    constructor(props) {
       super(props);
 
       this.state = {
-         answerText: memoryCard.answer,
-         imageryText: memoryCard.imagery,
+         answerText: this.props.editableCard.card.answer,
+         imageryText: this.props.editableCard.card.imagery,
          isShowDeleteChecked: false,
          isDeleteButtonDisplayed: false,
       };
@@ -27,12 +25,12 @@ class Edit extends React.Component {
 
    setImageryText(e) {
       this.setState({ imageryText: e.target.value });
-      console.log(e.target, e.target.value);
+      //console.log(e.target, e.target.value);
    }
 
    setAnswerText(e) {
       this.setState({ answerText: e.target.value });
-      console.log(e.target, e.target.value);
+      // console.log(e.target, e.target.value);
    }
 
    checkHasInvalidCharCount() {
@@ -50,6 +48,42 @@ class Edit extends React.Component {
          isShowDeleteChecked: e.target.checked,
          isDeleteButtonDisplayed: !this.state.isDeleteButtonDisplayed,
       });
+   }
+
+   saveCard() {
+      if (!this.checkHasInvalidCharCount()) {
+         // get this.state.answerText
+         // get this.state.imageryText
+         // PUT into db
+         const memoryCard = { ...this.props.editableCard.card };
+         memoryCard.answer = this.state.answerText;
+         memoryCard.imagery = this.state.imageryText;
+
+         // db PUT this card in our axios req
+         axios
+            .put(`/api/v1/memory-cards/${memoryCard.id}`, memoryCard)
+            .then(() => {
+               console.log("Memory Card updated");
+               const cards = [...this.props.queue.cards];
+               cards[this.props.queue.index] = memoryCard;
+               // Update Redux queue
+               this.props.dispatch({
+                  type: actions.UPDATE_QUEUED_CARDS,
+                  payload: cards,
+               });
+               //TODO: on success, fire success overlay
+
+               this.props.history.push(this.props.editableCard.prevRoute);
+            })
+            .catch((err) => {
+               //const data = err.response.data
+               const { data } = err.response;
+               console.log(data);
+               // TODO: Display error overlay, hide error overlay after 5 seconds
+            });
+      } else {
+         console.log("INVALID char counts");
+      }
    }
 
    deleteCard() {
@@ -140,8 +174,7 @@ class Edit extends React.Component {
                   >
                      Discard changes
                   </Link>
-                  <Link
-                     to={this.props.editableCard.prevRoute}
+                  <button
                      className={classnames(
                         "btn btn-primary float-right btn-lg  ",
                         {
@@ -149,6 +182,9 @@ class Edit extends React.Component {
                         }
                      )}
                      id="save-imagery"
+                     onClick={() => {
+                        this.saveCard();
+                     }}
                   >
                      <img
                         src={Save}
@@ -158,7 +194,7 @@ class Edit extends React.Component {
                         alt=""
                      />
                      Save
-                  </Link>
+                  </button>
                   <h4 className="my-8 text-center text-muted">
                      Card Properties
                   </h4>
