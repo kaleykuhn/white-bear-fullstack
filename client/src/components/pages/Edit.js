@@ -94,13 +94,13 @@ class Edit extends React.Component {
          .then((res) => {
             console.log(res.data);
             //TODO: Display success overlay
-            const deletableCard = this.props.editableCard.card;
+            //const deletableCard = this.props.editableCard.card;
             //const cards = this.props.queue.cards
 
             const cards = [...this.props.queue.cards];
             //const cards = this.props.queue.cards;
-            //const filteredCards = without(cards, memoryCard);
-            const filteredCards = without(cards, deletableCard);
+            const filteredCards = without(cards, memoryCard);
+            //const filteredCards = without(cards, deletableCard);
             console.log(filteredCards);
             this.props.dispatch({
                type: actions.UPDATE_QUEUED_CARDS,
