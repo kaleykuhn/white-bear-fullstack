@@ -24,7 +24,7 @@ router.get("/", validateJwt, (req, res) => {
                createdAt: memoryCard.created_at,
                nextAttemptAt: memoryCard.next_attempt_at,
                lastAttemptAt: memoryCard.last_attempt_at,
-               totalSuccessfullAttempts: memoryCard.total_successful_attempts,
+               totalSuccessfulAttempts: memoryCard.total_successful_attempts,
                level: memoryCard.level,
             };
          });

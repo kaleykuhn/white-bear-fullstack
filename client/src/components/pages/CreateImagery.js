@@ -30,37 +30,21 @@ class CreateImagery extends React.Component {
       } else return false;
    }
 
-   async updateCreatableCard() {
+   updateCreatableCard() {
       if (!this.checkImageryHasInvalidCharCount()) {
          console.log("UPDATING CREATABLE CARD");
-         const {
-            id,
-            answer,
-            userId,
-            createdAt,
-            nextAttemptAt,
-            lastAttemptAt,
-            totalSuccessfulAttempts,
-            level,
-         } = this.props.creatableCard;
-         await this.props.dispatch({
+         const creatableCard = { ...this.props.creatableCard };
+         creatableCard.imagery = this.state.imageryText;
+
+         this.props.dispatch({
             type: actions.UPDATE_CREATABLE_CARD,
-            payload: {
+            payload:
                // the card itself
-               id,
-               answer,
-               imagery: this.state.imageryText,
-               userId,
-               createdAt,
-               nextAttemptAt, //
-               lastAttemptAt,
-               totalSuccessfulAttempts,
-               level,
-            },
+               creatableCard,
          });
          // save to the database (make an API call)
          axios
-            .post("/api/v1/memory-cards", this.props.creatableCard)
+            .post("/api/v1/memory-cards", creatableCard)
             .then(() => {
                console.log("Memory Card created");
                //TODO: Display success overlay
