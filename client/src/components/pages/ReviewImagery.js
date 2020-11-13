@@ -43,34 +43,42 @@ class ReviewImagery extends React.Component {
       return (
          <AppTemplate>
             <div className="mt-5"></div>
-            <div className="mb-5">
-               <div className="card bg-primary">
-                  <div className="card-body">
-                     {memoryCard && memoryCard.imagery}
+            <div className="mb-5"></div>
+            {memoryCard && (
+               <>
+                  <div className="card bg-primary">
+                     <div className="card-body">
+                        {memoryCard && memoryCard.imagery}
+                     </div>
                   </div>
-               </div>
-            </div>
 
-            {this.props.queue.index > 0 && (
-               <button
-                  className="btn btn-link"
-                  onClick={() => {
-                     this.goToPrevCard();
-                  }}
-               >
-                  Previous card
-               </button>
+                  {this.props.queue.index > 0 && (
+                     <button
+                        className="btn btn-link"
+                        onClick={() => {
+                           this.goToPrevCard();
+                        }}
+                     >
+                        Previous card
+                     </button>
+                  )}
+                  <div className="mt-5"></div>
+                  <div className="float-right">
+                     <Link
+                        to="/review-answer"
+                        type="button"
+                        className="btn btn-outline-primary mr-0"
+                     >
+                        Show Answer
+                     </Link>
+                  </div>
+               </>
             )}
-
-            <div className="float-right">
-               <Link
-                  to="/review-answer"
-                  type="button"
-                  className="btn btn-outline-primary mr-0"
-               >
-                  Show Answer
-               </Link>
-            </div>
+            {!memoryCard && (
+               <p className>
+                  You have 0 cards. Please create a card before reviewing.
+               </p>
+            )}
          </AppTemplate>
       );
    }

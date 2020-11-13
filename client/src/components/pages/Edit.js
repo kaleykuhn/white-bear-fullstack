@@ -87,29 +87,51 @@ class Edit extends React.Component {
    }
 
    deleteCard() {
-      //TODO: delete from database
-      if (this.props.editableCard.prevRoute === "/review-answer") {
-         this.deleteCardFromStore();
-      }
-      if (this.props.editableCard.prevRoute === "/all-cards") {
-         this.props.history.push("/all-cards");
-      }
+      // query db to delete card
+      const memoryCard = { ...this.props.editableCard.card };
+      axios
+         .delete(`/api/v1/memory-cards/${memoryCard.id}`)
+         .then((res) => {
+            console.log(res.data);
+            //TODO: Display success overlay
+            const deletableCard = this.props.editableCard.card;
+            //const cards = this.props.queue.cards
+
+            const cards = [...this.props.queue.cards];
+            //const cards = this.props.queue.cards;
+            //const filteredCards = without(cards, memoryCard);
+            const filteredCards = without(cards, deletableCard);
+            console.log(filteredCards);
+            this.props.dispatch({
+               type: actions.UPDATE_QUEUED_CARDS,
+               payload: filteredCards,
+            });
+            this.props.dispatch({
+               type: actions.RESET_QUEUE,
+               payload: filteredCards,
+            });
+            if (this.props.editableCard.prevRoute === "/review-answer") {
+               if (filteredCards[this.props.queue.index] === undefined) {
+                  this.props.history.push("/review-empty");
+               } else {
+                  this.props.history.push("/review-imagery");
+               }
+            }
+            if (this.props.editableCard.prevRoute === "/all-cards") {
+               this.props.history.push("/all-cards");
+            }
+         })
+         .catch((err) => {
+            console.log(err.response.data);
+            // TODO: Display error overlay
+         });
    }
-   deleteCardFromStore() {
-      const deletedCard = this.props.editableCard.card;
-      const cards = this.props.queue.cards;
-      const filteredCards = without(cards, deletedCard);
-      console.log(filteredCards);
-      this.props.dispatch({
-         type: actions.UPDATE_QUEUED_CARDS,
-         payload: filteredCards,
-      });
-      if (filteredCards[this.props.queue.index] === undefined) {
-         this.props.history.push("/review-empty");
-      } else {
-         this.props.history.push("/review-imagery");
-      }
-   }
+   //deleteCardFromStore() {
+   // this.props.dispatch({
+   //    type: actions.RESET_QUEUE,
+   //    payload: filteredCards,
+   // });
+   //}
 
    render() {
       return (
